@@ -1,8 +1,8 @@
 package com.example.qaapp.controller;
 
-import com.example.qaapp.models.ERole;
-import com.example.qaapp.models.Role;
-import com.example.qaapp.models.User;
+import com.example.qaapp.model.ERole;
+import com.example.qaapp.model.Role;
+import com.example.qaapp.model.User;
 import com.example.qaapp.payload.request.LoginRequest;
 import com.example.qaapp.payload.request.SignupRequest;
 import com.example.qaapp.payload.response.JwtResponse;

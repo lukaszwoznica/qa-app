@@ -1,7 +1,7 @@
 package com.example.qaapp.repository;
 
-import com.example.qaapp.models.ERole;
-import com.example.qaapp.models.Role;
+import com.example.qaapp.model.ERole;
+import com.example.qaapp.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

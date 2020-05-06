@@ -1,4 +1,4 @@
-package com.example.qaapp.models;
+package com.example.qaapp.model;
 
 public enum ERole {
     ROLE_USER,

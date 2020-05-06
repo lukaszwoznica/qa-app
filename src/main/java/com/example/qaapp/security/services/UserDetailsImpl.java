@@ -1,6 +1,6 @@
 package com.example.qaapp.security.services;
 
-import com.example.qaapp.models.User;
+import com.example.qaapp.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

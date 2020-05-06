@@ -1,6 +1,6 @@
 package com.example.qaapp.security.services;
 
-import com.example.qaapp.models.User;
+import com.example.qaapp.model.User;
 import com.example.qaapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

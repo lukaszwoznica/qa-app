@@ -1,4 +1,4 @@
-package com.example.qaapp.models;
+package com.example.qaapp.model;
 
 import javax.persistence.*;
 
