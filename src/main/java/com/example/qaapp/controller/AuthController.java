@@ -64,15 +64,11 @@ public class AuthController {
         String password = signupRequest.getPassword();
 
         if (userRepository.existsByUsername(username)) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Username is already taken!"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
         }
 
         if (userRepository.existsByEmail(email)) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Email is already taken!"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already taken!"));
         }
 
         User user = new User(username, email, passwordEncoder.encode(password));
