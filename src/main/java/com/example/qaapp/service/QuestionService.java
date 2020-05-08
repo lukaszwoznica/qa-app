@@ -5,12 +5,10 @@ import com.example.qaapp.model.Question;
 import com.example.qaapp.model.User;
 import com.example.qaapp.payload.request.PostQuestionRequest;
 import com.example.qaapp.payload.request.PutQuestionRequest;
-import com.example.qaapp.repository.AnswerRepository;
 import com.example.qaapp.repository.CategoryRepository;
 import com.example.qaapp.repository.QuestionRepository;
 import com.example.qaapp.repository.UserRepository;
 import javassist.NotFoundException;
-import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,17 +19,14 @@ import java.util.Optional;
 public class QuestionService {
     private final QuestionRepository questionRepository;
     private final CategoryRepository categoryRepository;
-    private final AnswerRepository answerRepository;
     private final UserRepository userRepository;
 
     @Autowired
     public QuestionService(QuestionRepository questionRepository,
                            CategoryRepository categoryRepository,
-                           AnswerRepository answerRepository,
                            UserRepository userRepository) {
         this.questionRepository = questionRepository;
         this.categoryRepository = categoryRepository;
-        this.answerRepository = answerRepository;
         this.userRepository = userRepository;
     }
 
