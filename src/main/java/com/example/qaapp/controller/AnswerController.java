@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -47,6 +48,7 @@ public class AnswerController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> createQuestion(@Valid @RequestBody PostAnswerRequest request) {
         try {
             Answer answer = answerService.create(request);
@@ -66,6 +68,7 @@ public class AnswerController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Answer> updateAnswer(@PathVariable("id") Long id, @RequestBody PutAnswerRequest request) {
         Optional<Answer> maybeAnswer = answerService.findById(id);
 
@@ -80,6 +83,7 @@ public class AnswerController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<HttpStatus> deleteAnswer(@PathVariable("id") Long id) {
         try {
             answerService.deleteById(id);
