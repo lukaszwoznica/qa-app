@@ -4,7 +4,6 @@ import com.example.qaapp.model.Question;
 import com.example.qaapp.payload.request.PostQuestionRequest;
 import com.example.qaapp.payload.request.PutQuestionRequest;
 import com.example.qaapp.payload.response.MessageResponse;
-import com.example.qaapp.repository.QuestionRepository;
 import com.example.qaapp.service.QuestionService;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +18,11 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/questions")
+@RequestMapping("/api")
 public class QuestionController {
     private final QuestionService questionService;
 
@@ -31,7 +31,7 @@ public class QuestionController {
         this.questionService = questionService;
     }
 
-    @GetMapping
+    @GetMapping("/questions")
     public ResponseEntity<List<Question>> getAllQuestions() {
         try {
             List<Question> questions = questionService.findAll();
@@ -41,14 +41,23 @@ public class QuestionController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/questions/{id}")
     public ResponseEntity<Question> getQuestionById(@PathVariable("id") Long id) {
         Optional<Question> maybeQuestion = questionService.findById(id);
 
         return maybeQuestion.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping
+    @GetMapping("/categories/{id}/questions")
+    public ResponseEntity<Set<Question>> getAllQuestionsFromCategory(@PathVariable("id") Integer id) {
+        try {
+            return ResponseEntity.ok(questionService.findAllByCategoryId(id));
+        } catch (NotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/questions")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> createQuestion(@Valid @RequestBody PostQuestionRequest request) {
         try {
@@ -68,7 +77,7 @@ public class QuestionController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/questions/{id}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> updateQuestion(@PathVariable("id") Long id, @Valid @RequestBody PutQuestionRequest request) {
         Optional<Question> maybeQuestion = questionService.findById(id);
@@ -84,7 +93,7 @@ public class QuestionController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/questions/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<HttpStatus> deleteQuestion(@PathVariable("id") Long id) {
         try {

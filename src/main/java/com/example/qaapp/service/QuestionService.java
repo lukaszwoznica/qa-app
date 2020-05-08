@@ -12,8 +12,10 @@ import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class QuestionService {
@@ -62,5 +64,12 @@ public class QuestionService {
 
     public void deleteById(Long id) {
         questionRepository.deleteById(id);
+    }
+
+    public Set<Question> findAllByCategoryId(Integer categoryId) throws NotFoundException {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new NotFoundException("Category Not Found with id: " + categoryId));
+
+        return category.getQuestions();
     }
 }

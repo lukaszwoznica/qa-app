@@ -18,10 +18,11 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/answers")
+@RequestMapping("/api")
 public class AnswerController {
     private final AnswerService answerService;
 
@@ -30,7 +31,7 @@ public class AnswerController {
         this.answerService = answerService;
     }
 
-    @GetMapping
+    @GetMapping("/answers")
     public ResponseEntity<List<Answer>> getAllAnswers() {
         try {
             List<Answer> answers = answerService.findAll();
@@ -40,14 +41,23 @@ public class AnswerController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/answers/{id}")
     public ResponseEntity<Answer> getAnswerById(@PathVariable("id") Long id) {
         Optional<Answer> maybeAnswer = answerService.findById(id);
 
         return maybeAnswer.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping
+    @GetMapping("/questions/{id}/answers")
+    public ResponseEntity<Set<Answer>> getAllAnswersFromQuestion(@PathVariable("id") Long id) {
+        try {
+            return ResponseEntity.ok(answerService.findAllByQuestionId(id));
+        } catch (NotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/answers")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> createQuestion(@Valid @RequestBody PostAnswerRequest request) {
         try {
@@ -67,7 +77,7 @@ public class AnswerController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/answers/{id}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Answer> updateAnswer(@PathVariable("id") Long id, @RequestBody PutAnswerRequest request) {
         Optional<Answer> maybeAnswer = answerService.findById(id);
@@ -82,7 +92,7 @@ public class AnswerController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/answers/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<HttpStatus> deleteAnswer(@PathVariable("id") Long id) {
         try {

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class AnswerService {
@@ -55,5 +56,12 @@ public class AnswerService {
 
     public void deleteById(Long id) {
         answerRepository.deleteById(id);
+    }
+
+    public Set<Answer> findAllByQuestionId(Long questionId) throws NotFoundException {
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new NotFoundException("Category Not Found with id: " + questionId));
+
+        return question.getAnswers();
     }
 }
