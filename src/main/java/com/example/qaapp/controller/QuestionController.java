@@ -12,8 +12,10 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,7 +50,15 @@ public class QuestionController {
     @PostMapping
     public ResponseEntity<?> createQuestion(@Valid @RequestBody PostQuestionRequest request) {
         try {
-            return ResponseEntity.ok(questionService.create(request));
+            Question question = questionService.create(request);
+
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(question.getId())
+                    .toUri();
+
+            return ResponseEntity.created(location).body(question);
         } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
         } catch (Exception e) {
