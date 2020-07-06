@@ -1,8 +1,7 @@
 package com.example.qaapp.controller;
 
 import com.example.qaapp.model.Question;
-import com.example.qaapp.payload.request.PostQuestionRequest;
-import com.example.qaapp.payload.request.PutQuestionRequest;
+import com.example.qaapp.payload.request.QuestionRequest;
 import com.example.qaapp.payload.response.MessageResponse;
 import com.example.qaapp.service.QuestionService;
 import javassist.NotFoundException;
@@ -59,9 +58,10 @@ public class QuestionController {
 
     @PostMapping("/questions")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> createQuestion(@Valid @RequestBody PostQuestionRequest request) {
+    public ResponseEntity<?> createQuestion(@Valid @RequestBody QuestionRequest request,
+                                            @RequestHeader("Authorization") String token) {
         try {
-            Question question = questionService.create(request);
+            Question question = questionService.create(request, token);
 
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest()
@@ -79,7 +79,7 @@ public class QuestionController {
 
     @PutMapping("/questions/{id}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> updateQuestion(@PathVariable("id") Long id, @Valid @RequestBody PutQuestionRequest request) {
+    public ResponseEntity<?> updateQuestion(@PathVariable("id") Long id, @Valid @RequestBody QuestionRequest request) {
         Optional<Question> maybeQuestion = questionService.findById(id);
 
         if (maybeQuestion.isPresent()) {

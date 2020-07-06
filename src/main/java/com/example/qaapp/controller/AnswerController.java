@@ -59,9 +59,10 @@ public class AnswerController {
 
     @PostMapping("/answers")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> createQuestion(@Valid @RequestBody PostAnswerRequest request) {
+    public ResponseEntity<?> createAnswer(@Valid @RequestBody PostAnswerRequest request,
+                                          @RequestHeader("Authorization") String token) {
         try {
-            Answer answer = answerService.create(request);
+            Answer answer = answerService.create(request, token);
 
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest()

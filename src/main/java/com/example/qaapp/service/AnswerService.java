@@ -7,6 +7,7 @@ import com.example.qaapp.payload.request.PostAnswerRequest;
 import com.example.qaapp.repository.AnswerRepository;
 import com.example.qaapp.repository.QuestionRepository;
 import com.example.qaapp.repository.UserRepository;
+import com.example.qaapp.security.jwt.JwtUtils;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,14 +21,17 @@ public class AnswerService {
     private final AnswerRepository answerRepository;
     private final QuestionRepository questionRepository;
     private final UserRepository userRepository;
+    private final JwtUtils jwtUtils;
 
     @Autowired
     public AnswerService(AnswerRepository answerRepository,
                          QuestionRepository questionRepository,
-                         UserRepository userRepository) {
+                         UserRepository userRepository,
+                         JwtUtils jwtUtils) {
         this.answerRepository = answerRepository;
         this.questionRepository = questionRepository;
         this.userRepository = userRepository;
+        this.jwtUtils = jwtUtils;
     }
 
     public List<Answer> findAll() {
@@ -38,12 +42,14 @@ public class AnswerService {
         return answerRepository.findById(id);
     }
 
-    public Answer create(PostAnswerRequest request) throws NotFoundException {
+    public Answer create(PostAnswerRequest request, String token) throws NotFoundException {
         Question question = questionRepository.findById(request.getQuestionId())
                 .orElseThrow(() -> new NotFoundException("Question Not Found with id: " + request.getQuestionId()));
 
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new NotFoundException("User Not Found with id: " + request.getUserId()));
+        String clearToken = token.startsWith("Bearer ") ? token.substring(7) : token;
+        String username = jwtUtils.getUserNameFromJwtToken(clearToken);
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundException("User Not Found"));
 
         Answer answer = new Answer(request.getBody(), question, user);
 

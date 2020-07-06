@@ -4,7 +4,7 @@ package com.example.qaapp.payload.request;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-public class PutQuestionRequest {
+public class QuestionRequest {
     @NotBlank
     private String body;
 

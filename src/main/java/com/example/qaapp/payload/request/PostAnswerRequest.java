@@ -10,8 +10,6 @@ public class PostAnswerRequest {
     @NotNull
     private Long questionId;
 
-    @NotNull
-    private Long userId;
 
     public String getBody() {
         return body;
@@ -29,11 +27,4 @@ public class PostAnswerRequest {
         this.questionId = questionId;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
 }
